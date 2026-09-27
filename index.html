@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="cepanton" content="width=device-width, initial-scale=1.0">
+<title>Keuangan Rumah Tangga</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f4f6f8;
+  color: #202124;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  max-width: 760px;
+  margin: auto;
+  padding: 22px 18px 40px;
+}
+
+h1 {
+  font-size: 30px;
+  margin: 0 0 22px;
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 26px;
+}
+
+.tab {
+  border: 2px solid #ddd;
+  background: white;
+  border-radius: 18px;
+  padding: 17px 5px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.tab.active {
+  background: #222;
+  color: white;
+  border-color: #222;
+}
+
+.card {
+  background: white;
+  border-radius: 24px;
+  padding: 25px;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.05);
+}
+
+.label {
+  color: #888;
+  font-size: 18px;
+  margin-bottom: 9px;
+}
+
+.big {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.green {
+  color: #218b5b;
+}
+
+.red {
+  color: #c94b50;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+h2 {
+  font-size: 24px;
+  margin-top: 0;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin: 15px 0;
+  font-size: 17px;
+}
+
+.bar {
+  height: 13px;
+  background: #eee;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  background: #222;
+  border-radius: 20px;
+}
+
+.progress {
+  height: 18px;
+  background: #eee;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.progress div {
+  height: 100%;
+  width: 0%;
+  background: #218b5b;
+}
+
+.notice {
+  background: #f0f7f3;
+  border-radius: 15px;
+  padding: 16px;
+  line-height: 1.5;
+  margin-top: 18px;
+}
+
+.formgrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.full {
+  grid-column: 1 / -1;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font-size: 16px;
+  background: white;
+}
+
+button {
+  border: 0;
+  border-radius: 12px;
+  padding: 14px 18px;
+  background: #222;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button.hapus {
+  background: #eee;
+  color: #333;
+  padding: 7px 10px;
+  font-size: 12px;
+}
+
+.transaction {
+  padding: 15px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.transaction:last-child {
+  border-bottom: 0;
+}
+
+.small {
+  color: #888;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 560px) {
+
+  .container {
+    padding: 20px 16px;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  .tab {
+    font-size: 16px;
+  }
+
+  .grid2,
+  .formgrid {
+    grid-template-columns: 1fr;
+  }
+
+  .big {
+    font-size: 27px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🏠 Keuangan Rumah Tangga</h1>
+
+<div class="tabs">
+
+<div class="tab active"
+onclick="showTab('dashboard', this)">
+📊 Dashboard
+</div>
+
+<div class="tab"
+onclick="showTab('transaksi', this)">
+🧾 Transaksi
+</div>
+
+<div class="tab"
+onclick="showTab('target', this)">
+🎯 Target
+</div>
+
+</div>
+
+
+<!-- DASHBOARD -->
+
+<section id="dashboard">
+
+<div class="card">
+
+<div class="label">
+Saldo
+</div>
+
+<div class="big" id="saldo">
+Rp 2.500.000
+</div>
+
+</div>
+
+
+<div class="grid2">
+
+<div class="card">
+
+<div class="label">
+Pemasukan
+</div>
+
+<div class="big green" id="income">
+Rp 2.500.000
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="label">
+Pengeluaran
+</div>
+
+<div class="big red" id="expense">
+Rp 0
+</div>
+
+</div>
+
+</div>
+
+
+<!-- RENCANA GAJI -->
+
+<div class="card">
+
+<h2>💰 Rencana Gaji Rp2.500.000</h2>
+
+<div class="row">
+<span>🏦 Tabungan</span>
+<b id="pSave">Rp 500.000</b>
+</div>
+
+<div class="bar">
+<div class="fill" style="width:20%"></div>
+</div>
+
+
+<div class="row">
+<span>🏠 Kebutuhan wajib</span>
+<b>Rp 1.200.000</b>
+</div>
+
+<div class="bar">
+<div class="fill" style="width:48%"></div>
+</div>
+
+
+<div class="row">
+<span>🛵 Transportasi</span>
+<b>Rp 400.000</b>
+</div>
+
+<div class="bar">
+<div class="fill" style="width:16%"></div>
+</div>
+
+
+<div class="row">
+<span>🛒 Keperluan lain</span>
+<b id="pOther">Rp 400.000</b>
+</div>
+
+<div class="bar">
+<div class="fill" style="width:16%"></div>
+</div>
+
+
+<div class="notice">
+
+<b>💡 Target tabungan bulan ini</b>
+
+<br>
+
+Rp 500.000 atau 20% dari gaji.
+
+<br><br>
+
+Sebaiknya tabungan disisihkan terlebih dahulu ketika menerima gaji.
+
+</div>
+
+</div>
+
+
+<!-- PROGRESS TABUNGAN -->
+
+<div class="card">
+
+<h2>🏦 Progress Tabungan</h2>
+
+<div class="row">
+
+<span>
+Sudah ditabung
+</span>
+
+<b id="savedNow">
+Rp 0
+</b>
+
+</div>
+
+<div class="progress">
+
+<div id="

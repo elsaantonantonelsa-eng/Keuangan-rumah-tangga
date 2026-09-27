@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="cepanton" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Keuangan Rumah Tangga</title>
 
 <style>
@@ -109,6 +109,7 @@ h2 {
   height: 100%;
   background: #222;
   border-radius: 20px;
+  transition: width .3s;
 }
 
 .progress {
@@ -122,6 +123,7 @@ h2 {
   height: 100%;
   width: 0%;
   background: #218b5b;
+  transition: width .3s;
 }
 
 .notice {
@@ -163,11 +165,23 @@ button {
   cursor: pointer;
 }
 
+button:hover {
+  opacity: .85;
+}
+
 button.hapus {
   background: #eee;
   color: #333;
   padding: 7px 10px;
   font-size: 12px;
+}
+
+button.simpan {
+  background: #218b5b;
+}
+
+button.edit {
+  margin-top: 10px;
 }
 
 .transaction {
@@ -190,7 +204,6 @@ button.hapus {
 }
 
 @media (max-width: 560px) {
-
   .container {
     padding: 20px 16px;
   }
@@ -241,7 +254,7 @@ onclick="showTab('target', this)">
 </div>
 
 
-<!-- DASHBOARD -->
+<!-- ================= DASHBOARD ================= -->
 
 <section id="dashboard">
 
@@ -292,7 +305,13 @@ Rp 0
 
 <div class="card">
 
-<h2>💰 Rencana Gaji Rp2.500.000</h2>
+<h2>💰 Rencana Gaji</h2>
+
+<div class="row">
+<span>💵 Gaji</span>
+<b id="pSalary">Rp 2.500.000</b>
+</div>
+
 
 <div class="row">
 <span>🏦 Tabungan</span>
@@ -300,27 +319,27 @@ Rp 0
 </div>
 
 <div class="bar">
-<div class="fill" style="width:20%"></div>
+<div class="fill" id="barSave"></div>
 </div>
 
 
 <div class="row">
 <span>🏠 Kebutuhan wajib</span>
-<b>Rp 1.200.000</b>
+<b id="pNeed">Rp 1.200.000</b>
 </div>
 
 <div class="bar">
-<div class="fill" style="width:48%"></div>
+<div class="fill" id="barNeed"></div>
 </div>
 
 
 <div class="row">
 <span>🛵 Transportasi</span>
-<b>Rp 400.000</b>
+<b id="pTransport">Rp 400.000</b>
 </div>
 
 <div class="bar">
-<div class="fill" style="width:16%"></div>
+<div class="fill" id="barTransport"></div>
 </div>
 
 
@@ -330,7 +349,7 @@ Rp 0
 </div>
 
 <div class="bar">
-<div class="fill" style="width:16%"></div>
+<div class="fill" id="barOther"></div>
 </div>
 
 
@@ -340,13 +359,21 @@ Rp 0
 
 <br>
 
+<span id="targetText">
 Rp 500.000 atau 20% dari gaji.
+</span>
 
 <br><br>
 
 Sebaiknya tabungan disisihkan terlebih dahulu ketika menerima gaji.
 
 </div>
+
+
+<button class="edit"
+onclick="showTab('target', document.querySelectorAll('.tab')[2])">
+✏️ Edit Rencana Keuangan
+</button>
 
 </div>
 
@@ -371,4 +398,663 @@ Rp 0
 
 <div class="progress">
 
-<div id="
+<div id="saveProgress"></div>
+
+</div>
+
+<div class="small" id="progressText">
+0% dari target
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= TRANSAKSI ================= -->
+
+<section id="transaksi" class="hidden">
+
+<div class="card">
+
+<h2>🧾 Tambah Transaksi</h2>
+
+<div class="formgrid">
+
+<select id="type">
+
+<option value="income">
+Pemasukan
+</option>
+
+<option value="expense">
+Pengeluaran
+</option>
+
+</select>
+
+
+<input
+id="amount"
+type="number"
+min="0"
+placeholder="Nominal"
+/>
+
+
+<input
+id="desc"
+class="full"
+placeholder="Keterangan"
+/>
+
+
+<button
+class="simpan full"
+onclick="addTransaction()">
+
+➕ Simpan Transaksi
+
+</button>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>📋 Riwayat Transaksi</h2>
+
+<div id="transactionList">
+
+<div class="small">
+Belum ada transaksi.
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= TARGET ================= -->
+
+<section id="target" class="hidden">
+
+<div class="card">
+
+<h2>⚙️ Edit Rencana Keuangan</h2>
+
+<div class="formgrid">
+
+
+<input
+id="salary"
+type="number"
+min="0"
+placeholder="Gaji"
+/>
+
+
+<input
+id="saving"
+type="number"
+min="0"
+placeholder="Target Tabungan"
+/>
+
+
+<input
+id="need"
+type="number"
+min="0"
+placeholder="Kebutuhan Wajib"
+/>
+
+
+<input
+id="transport"
+type="number"
+min="0"
+placeholder="Transportasi"
+/>
+
+
+<input
+id="other"
+type="number"
+min="0"
+placeholder="Keperluan Lain"
+/>
+
+
+<input
+id="alreadySaved"
+type="number"
+min="0"
+placeholder="Sudah Ditabung"
+/>
+
+
+<button
+class="simpan full"
+onclick="savePlan()">
+
+💾 Simpan Perubahan
+
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+</div>
+
+
+<script>
+
+/* ================= DATA ================= */
+
+const KEY = "keuanganRumahTangga";
+
+let data = JSON.parse(localStorage.getItem(KEY)) || {
+
+salary: 2500000,
+
+saving: 500000,
+
+need: 1200000,
+
+transport: 400000,
+
+other: 400000,
+
+alreadySaved: 0,
+
+transactions: []
+
+};
+
+
+/* ================= FORMAT RUPIAH ================= */
+
+function rupiah(number) {
+
+return new Intl.NumberFormat("id-ID", {
+
+style: "currency",
+
+currency: "IDR",
+
+maximumFractionDigits: 0
+
+}).format(number || 0);
+
+}
+
+
+/* ================= SIMPAN DATA ================= */
+
+function saveData() {
+
+localStorage.setItem(
+KEY,
+JSON.stringify(data)
+);
+
+}
+
+
+/* ================= TOTAL PEMASUKAN ================= */
+
+function totalIncome() {
+
+let tambahan = data.transactions
+
+.filter(t => t.type === "income")
+
+.reduce((total, t) => total + t.amount, 0);
+
+return data.salary + tambahan;
+
+}
+
+
+/* ================= TOTAL PENGELUARAN ================= */
+
+function totalExpense() {
+
+return data.transactions
+
+.filter(t => t.type === "expense")
+
+.reduce((total, t) => total + t.amount, 0);
+
+}
+
+
+/* ================= RENDER ================= */
+
+function render() {
+
+let income = totalIncome();
+
+let expense = totalExpense();
+
+let saldo = income - expense;
+
+
+/* SALDO */
+
+document.getElementById("saldo").textContent =
+rupiah(saldo);
+
+
+/* PEMASUKAN */
+
+document.getElementById("income").textContent =
+rupiah(income);
+
+
+/* PENGELUARAN */
+
+document.getElementById("expense").textContent =
+rupiah(expense);
+
+
+/* RENCANA */
+
+document.getElementById("pSalary").textContent =
+rupiah(data.salary);
+
+document.getElementById("pSave").textContent =
+rupiah(data.saving);
+
+document.getElementById("pNeed").textContent =
+rupiah(data.need);
+
+document.getElementById("pTransport").textContent =
+rupiah(data.transport);
+
+document.getElementById("pOther").textContent =
+rupiah(data.other);
+
+
+/* BAR */
+
+setBar("barSave", data.saving);
+
+setBar("barNeed", data.need);
+
+setBar("barTransport", data.transport);
+
+setBar("barOther", data.other);
+
+
+/* TARGET TABUNGAN */
+
+let persen = data.salary > 0
+
+? Math.round(
+(data.saving / data.salary) * 100
+)
+
+: 0;
+
+
+document.getElementById("targetText").textContent =
+
+rupiah(data.saving) +
+
+" atau " +
+
+persen +
+
+"% dari gaji.";
+
+
+/* TABUNGAN */
+
+document.getElementById("savedNow").textContent =
+rupiah(data.alreadySaved);
+
+
+let progress = data.saving > 0
+
+? Math.min(
+(data.alreadySaved / data.saving) * 100,
+100
+)
+
+: 0;
+
+
+document.getElementById("saveProgress").style.width =
+progress + "%";
+
+
+document.getElementById("progressText").textContent =
+
+Math.round(progress) +
+
+"% dari target";
+
+
+/* TRANSAKSI */
+
+renderTransactions();
+
+}
+
+
+/* ================= BAR ================= */
+
+function setBar(id, value) {
+
+let width = data.salary > 0
+
+? (value / data.salary) * 100
+
+: 0;
+
+width = Math.min(width, 100);
+
+document.getElementById(id).style.width =
+width + "%";
+
+}
+
+
+/* ================= TRANSAKSI ================= */
+
+function addTransaction() {
+
+let type =
+document.getElementById("type").value;
+
+let amount =
+Number(document.getElementById("amount").value);
+
+let desc =
+document.getElementById("desc").value.trim();
+
+
+if (!amount || amount <= 0) {
+
+alert("Masukkan nominal yang benar.");
+
+return;
+
+}
+
+
+data.transactions.unshift({
+
+type: type,
+
+amount: amount,
+
+desc: desc || "Tanpa keterangan"
+
+});
+
+
+saveData();
+
+document.getElementById("amount").value = "";
+
+document.getElementById("desc").value = "";
+
+
+render();
+
+alert("Transaksi berhasil ditambahkan.");
+
+}
+
+
+/* ================= HAPUS TRANSAKSI ================= */
+
+function deleteTransaction(index) {
+
+if (!confirm("Hapus transaksi ini?")) {
+
+return;
+
+}
+
+
+data.transactions.splice(index, 1);
+
+saveData();
+
+render();
+
+}
+
+
+/* ================= RENDER TRANSAKSI ================= */
+
+function renderTransactions() {
+
+let list =
+document.getElementById("transactionList");
+
+
+if (data.transactions.length === 0) {
+
+list.innerHTML =
+
+'<div class="small">Belum ada transaksi.</div>';
+
+return;
+
+}
+
+
+list.innerHTML = "";
+
+
+data.transactions.forEach((transaction, index) => {
+
+let div =
+document.createElement("div");
+
+
+div.className = "transaction";
+
+
+let tanda =
+transaction.type === "income"
+? "+"
+: "-";
+
+
+let warna =
+transaction.type === "income"
+? "green"
+: "red";
+
+
+let jenis =
+transaction.type === "income"
+? "Pemasukan"
+: "Pengeluaran";
+
+
+div.innerHTML = `
+
+<div style="
+display:flex;
+justify-content:space-between;
+gap:10px;
+">
+
+<b>
+${escapeHTML(transaction.desc)}
+</b>
+
+<b class="${warna}">
+${tanda}${rupiah(transaction.amount)}
+</b>
+
+</div>
+
+<div class="small">
+${jenis}
+</div>
+
+<button
+class="hapus"
+onclick="deleteTransaction(${index})">
+
+Hapus
+
+</button>
+
+`;
+
+
+list.appendChild(div);
+
+});
+
+}
+
+
+/* ================= KEAMANAN TEKS ================= */
+
+function escapeHTML(text) {
+
+return String(text)
+
+.replace(/&/g, "&amp;")
+
+.replace(/</g, "&lt;")
+
+.replace(/>/g, "&gt;")
+
+.replace(/"/g, "&quot;")
+
+.replace(/'/g, "&#039;");
+
+}
+
+
+/* ================= SIMPAN RENCANA ================= */
+
+function savePlan() {
+
+data.salary =
+Number(document.getElementById("salary").value) || 0;
+
+
+data.saving =
+Number(document.getElementById("saving").value) || 0;
+
+
+data.need =
+Number(document.getElementById("need").value) || 0;
+
+
+data.transport =
+Number(document.getElementById("transport").value) || 0;
+
+
+data.other =
+Number(document.getElementById("other").value) || 0;
+
+
+data.alreadySaved =
+Number(document.getElementById("alreadySaved").value) || 0;
+
+
+saveData();
+
+render();
+
+alert("Perubahan berhasil disimpan.");
+
+}
+
+
+/* ================= ISI FORM ================= */
+
+function loadPlan() {
+
+document.getElementById("salary").value =
+data.salary;
+
+document.getElementById("saving").value =
+data.saving;
+
+document.getElementById("need").value =
+data.need;
+
+document.getElementById("transport").value =
+data.transport;
+
+document.getElementById("other").value =
+data.other;
+
+document.getElementById("alreadySaved").value =
+data.alreadySaved;
+
+}
+
+
+/* ================= PINDAH TAB ================= */
+
+function showTab(id, element) {
+
+document
+.querySelectorAll("section")
+.forEach(section => {
+
+section.classList.add("hidden");
+
+});
+
+
+document
+.getElementById(id)
+.classList.remove("hidden");
+
+
+document
+.querySelectorAll(".tab")
+.forEach(tab => {
+
+tab.classList.remove("active");
+
+});
+
+
+if (element) {
+
+element.classList.add("active");
+
+}
+
+
+if (id === "target") {
+
+loadPlan();
+
+}
+
+}
+
+
+/* ================= MULAI ================= */
+
+render();
+
+</script>
+
+</body>
+</html>
